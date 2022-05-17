@@ -1,0 +1,16 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath BuildPlugins.INSTANCE.androidPluggin
+        classpath BuildPlugins.INSTANCE.kotlinGradlePluggin
+        classpath BuildPlugins.INSTANCE.detektPluggin
+        classpath BuildPlugins.INSTANCE.daggerHiltPluggin
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

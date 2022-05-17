@@ -1,0 +1,81 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'io.gitlab.arturbosch.detekt'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdk BuildConfig.INSTANCE.compileSdk
+
+    defaultConfig {
+        applicationId BuildConfig.INSTANCE.applicationId
+        minSdk BuildConfig.INSTANCE.minSdk
+        targetSdk BuildConfig.INSTANCE.targetSdk
+        versionCode BuildConfig.INSTANCE.versionCode
+        versionName BuildConfig.INSTANCE.versionName
+        testInstrumentationRunner BuildConfig.INSTANCE.androidJUnitRunner
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            applicationIdSuffix ".debug"
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
+dependencies {
+
+    implementation Deps.INSTANCE.coreKtx
+    implementation Deps.INSTANCE.appCompat
+    implementation Deps.INSTANCE.materialDesign
+    implementation Deps.INSTANCE.constraintLayout
+    implementation project(path: ':MessagerAndroidLibrary')
+    testImplementation Deps.INSTANCE.junit
+    androidTestImplementation Deps.INSTANCE.testExtUnit
+    androidTestImplementation Deps.INSTANCE.testEspresso
+
+    // dagger hilt
+    implementation Deps.INSTANCE.daggerHilt
+    kapt Deps.INSTANCE.kaptDaggerHiltAndroidCompiler
+
+}
+
+detekt {
+    toolVersion = "1.17.0"
+    buildUponDefaultConfig = false
+    allRules = false
+    config = files("../detekt/detekt.yml")
+    baseline = file("../detekt/baseline.xml")
+    input = files("src/main/java/com")
+    debug = false
+    reports {
+        html {
+            enabled = true
+            destination = file("build/reports/detekt.html")
+        }
+        xml {
+            enabled = true
+            destination = file("build/reports/detekt.xml")
+        }
+        txt.enabled = false
+        sarif.enabled = false
+    }
+}
